@@ -21,19 +21,30 @@ class Sampler:
         self.trees = trees
         self.sampling_function = sampling_function
         self.working_subgraph = graph
+        self.old_tuples = []
+        #self.current_tuple = Tree_Edges_Partition_Tuple(TODO)
 
     def set_working_subgraph(self, subgraph):
         self.working_subraph = subgraph
 
+    def update_tuple(self, new_tuple):
+        self.old_pairs.append(self.current_tuple)
+        self.current_tuple = new_tuple
 
-class Tree:
+
+class Tree_Edges_Partition_Tuple:
     '''
     This is meant to be an extension of a networkx graph to keep track of root and topological ordering
     '''
-    def __init__(self, root, topological_ordering):
+    def __init__(self, root, topological_ordering, partition=None):
         '''
         :root:
         :topological_ordering:
         '''
         self.root = root
         self.topological_ordering = topological_ordering
+        self.partition = partition
+
+        def lift(TODO):
+
+        def project(TODO):
