@@ -7,13 +7,18 @@ Created on Tue Jul 10 01:08:09 2018
 import random
 import networkx as nx
 
+def random_spanning_tree(graph, method = "Wilson"):
+    if method == "Wilson":
+        return random_spanning_tree_wilson(graph)
+    if method == "Broder":
+        return random_spanning_tree_broder(graph)
+
 '''
 
 Broder's algorithm
 
 '''
 def simple_random_walk(graph,node):
-    '''takes'''
     wet = set([node])
     trip = [node]
     graph_size = len(graph.nodes())
@@ -24,8 +29,7 @@ def simple_random_walk(graph,node):
         node = next_step
     return trip
 
-def forward_tree(graph,node):
-    
+def forward_tree(graph,node):  
     walk = simple_random_walk(graph, node)
     edges = []
     for vertex in graph.nodes():
@@ -34,8 +38,7 @@ def forward_tree(graph,node):
             edges.append( [walk[first_occurance], walk[first_occurance-1]])
     return edges
 
-def random_spanning_tree(graph):
-    #It's going to be faster to use the David Wilson algorithm here instead.
+def random_spanning_tree_broder(graph):
     tree_edges = forward_tree(graph, random.choice(list(graph.nodes())))
     tree = nx.DiGraph()
     for node in graph.nodes:
@@ -73,7 +76,6 @@ def random_spanning_tree_wilson(graph):
             len_hitting_set += 1
             allowable_set.remove(v)
     tree = nx.DiGraph()
-    # Adding nodes that inherit the attributes from the original graph
     
     
     for node in graph.nodes:
@@ -98,10 +100,7 @@ def random_walk_until_hit(graph, start_node, hitting_set):
     current_node = start_node
     trip = [current_node]
     while current_node not in hitting_set:
-        #Add weights here:
         current_node = random.choice(list(graph.neighbors(current_node)))
-        
-        ###
         trip.append(current_node)
     return trip
 
@@ -122,21 +121,3 @@ def loop_erasure(trip):
     loop_erased_trip = [trip[i] for i in loop_erased_walk_indices]
     
     return (loop_erased_trip, branch_length + 1)
-    #I don't think that passing the length sped it up at all...?
-
-############Non Uniform Spanning Tree Generation:
-    
-def random_greedy(graph):
-    '''This uses prims algorithm with a random weighting to make a tree. 
-    This is  slow.
-    
-    '''
-    graph_edges = list(graph.edges())
-    random.shuffle(graph_edges)
-    tree = nx.Graph()
-    for edge in graph_edges:
-        tree.add_edge(edge[0], edge[1])
-        if not nx.is_forest(tree):
-            tree.remove_edge(edge[0], edge[1])
-    return tree
-

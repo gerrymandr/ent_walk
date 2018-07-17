@@ -28,8 +28,7 @@ from Broder_Wilson_algorithms import random_spanning_tree_wilson, random_spannin
 '''
 
 def random_partition(sampler):
-                     
-                     #graph, num_blocks, tree_algorithm, delta, pruning_algorithm):
+    #graph, num_blocks, tree_algorithm, delta, pruning_algorithm):
     '''
         
     :graph:
@@ -51,8 +50,8 @@ def random_partition(sampler):
         return None
     
 def tree_step(sampler):
-    
     '''
+    sampler has: 
     
     '''
     
