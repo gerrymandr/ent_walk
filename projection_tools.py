@@ -102,17 +102,17 @@ def cut_edges(graph, subgraph_1, subgraph_2):
 
 ###########Test:
     
-def test():
-    #This demonstrates the functionality of these functions.
-    #This require random_spanning_tree_wilson and viz to be imprted
-    graph = nx.grid_graph([50,50])
-    for vertex in graph:
-        graph.nodes[vertex]["geopos"] = vertex
-        graph.nodes[vertex]["POP10"] = 1
-    tree = random_spanning_tree_wilson(graph)
-    e = random.choice(list(tree.edges()))
-    partition = remove_edges_projection(graph, tree, [e])
-    lift = random_lift(graph, partition, random_spanning_tree_wilson)
-    partition_2 = remove_edges_projection(graph, lift[0], lift[1])
-    visualize_partition(graph, partition)
-    visualize_partition(graph, partition_2)
+#def test():
+#    #This demonstrates the functionality of these functions.
+#    #This require random_spanning_tree_wilson and visualize_partition to be imprted
+#    graph = nx.grid_graph([100,100])
+#    for vertex in graph:
+#        graph.nodes[vertex]["geopos"] = vertex
+#        graph.nodes[vertex]["POP10"] = 1
+#    tree = random_spanning_tree_wilson(graph)
+#    e = random.choice(list(tree.edges()))
+#    partition = remove_edges_projection(graph, tree, [e])
+#    lift = random_lift(graph, partition, random_spanning_tree_wilson)
+#    partition_2 = remove_edges_projection(graph, lift[0], lift[1])
+#    visualize_partition(graph, partition)
+#    visualize_partition(graph, partition_2)
