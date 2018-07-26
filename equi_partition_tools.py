@@ -35,8 +35,7 @@ def equi_split(tree, num_blocks):
             return None
     return found_edges
 
-def delta_equi_split(sampler):
-    #(tree, num_blocks, delta):
+def almost_equi_split(tree, num_blocks, delta):
     '''This returns a partition from the that is delta close to be an equi-partition
     
     Specifically, this runs choose_best_weight iteratively, which find an
@@ -47,19 +46,22 @@ def delta_equi_split(sampler):
     :delta: each block B must satisfy 1 - delta <= B / (tree / num_blocks) <= 1 + delta
     
     '''
-    label_weights(sampler.tree)
+    label_weights(tree)
 
     found_edges = []
     found_blocks = 0
-    while found_blocks < sampler.num_blocks - 1:
-        edge, ratio = choose_best_weight(sampler)
-        if (ratio >= 1 + sampler.delta) or (ratio <= 1 - sampler.delta):
+    pop = [tree.nodes[i]["POP10"] for i in tree.nodes()]
+    total_population = np.sum(pop)
+    
+    ideal_value = total_population/ num_blocks
+    while found_blocks < num_blocks - 1:
+        edge, ratio = choose_best_weight(tree, num_blocks, ideal_value)
+        if (ratio >= 1 + delta) or (ratio <= 1 - delta):
             return None
         found_edges.append(edge)
         found_blocks += 1
-        update_weights(sampler.tree, edge)
+        update_weights(tree, edge)
     return found_edges 
-
 #def check_delta_equi_split(subgraph_sizes, delta = .01):
 #    '''returns True if all ratios of sizes are all within 1 + delta
 #    :subgraph_sizes: list of sizes
@@ -167,7 +169,8 @@ def choose_best_weight_hard(tree, num_blocks):
             return list(tree.edges(node))[0]
     return None
 
-def choose_best_weight(tree, num_blocks):
+
+def choose_best_weight(tree, num_blocks, ideal_value):
     """Choose edge from graph with weight closest to n_nodes / num_blocks.
 
     :graph: NetworkX Graph labeled by :func:`~label_weights`.
@@ -175,23 +178,23 @@ def choose_best_weight(tree, num_blocks):
 
     """
     
-    pop = [tree.nodes[i]["POP10"] for i in tree.nodes()]
-    len_tree = np.sum(pop)
-    ###This should be changed to total populatoin.
-    
-    ideal_value = len_tree/ num_blocks
+
     best_node = None
-    best_difference = float("inf")
-    tree_nodes = list( set(tree.nodes()).difference( set( tree.graph["root"])) )
-    #Not allowed to pick root, causes problems
+    best_ratio = float("inf")
+    tree_nodes = set(tree.nodes())
+    tree_nodes.discard( tree.graph["root"] )
+    tree_nodes = list(tree_nodes)
+    #Not allowed to pick root, causes problems - every node but the root describes 
+    #an edge uniquely by the forward edge out of it. This is what we want to pick.
     random.shuffle(tree_nodes)
     for node in tree_nodes:
-        diff = abs(ideal_value - tree.nodes[node]["weight"])
-        if diff < best_difference:
+        ratio = abs(tree.nodes[node]["weight"] / ideal_value)
+        if abs( ratio - 1) <  abs( 1 - best_ratio):
             best_node = node
-            best_difference = diff
+            best_ratio = ratio
 
     edge = list(tree.edges(best_node))[0]
     weight = tree.nodes[best_node]["weight"]
+    print(weight / ideal_value)
 
-    return (edge, ideal_value /  weight)
+    return (edge, weight / ideal_value)

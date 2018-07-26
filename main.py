@@ -100,8 +100,17 @@ def test_fast_with_walk(graph_size, num_blocks, delta, step = "Basis", jump_size
         
         
     
-#graph = nx.grid_graph([50,50])
-#tree_1 = random_spanning_tree(graph)
+graph = nx.grid_graph([800,800])
+for vertex in graph:
+    graph.nodes[vertex]["geopos"] = vertex
+    graph.nodes[vertex]["POP10"] = 1
+explore_random(graph, 1, 2, pictures=True, divide_and_conquer=False)
+graph = nx.grid_graph([1200,1200])
+for vertex in graph:
+    graph.nodes[vertex]["geopos"] = vertex
+    graph.nodes[vertex]["POP10"] = 1
+explore_random(graph, 1, 2, pictures=True, divide_and_conquer=False)
+#tree_1 = random_spanning_tree(graph) 
 #tree_2 = random_spanning_tree_wilson(graph)    
 
 #test_fast_with_walk(120, 2, 0.01, "Broder", 1000)
